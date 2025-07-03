@@ -1,4 +1,4 @@
-Teach-Drop is an e-learning platform built with React 18 (Frontend) and Laravel 11 (Backend).
+TeachDrop is an e-learning platform built with React 18 (Frontend) and Laravel 11 (Backend).
 It helps contributors upload lessons and students access learning materials.
 
 🚀 Features
