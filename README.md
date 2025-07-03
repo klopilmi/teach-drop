@@ -8,10 +8,4 @@ It helps contributors upload lessons and students access learning materials.
 🛡️ Secure API built with Laravel 11
 ⚛️ Frontend built with React 18 + Vite
 
-🛠️ Tech Stack
-Frontend	Backend	Database
-React 18	Laravel 11	MySQL / SQLite
-Vite	PHP 8.2+
-
-
 
