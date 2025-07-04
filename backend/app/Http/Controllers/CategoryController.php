@@ -18,7 +18,11 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $category = Category::create($request->validated());
-        return response()->json($category, 201);
+        return response()->json([
+            'statusCode' => 200,
+            'message' => 'Category added successfully.',
+            'data' => $category,
+        ]);
     }
 
     public function show(Category $category)
@@ -29,12 +33,19 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         $category->update($request->validated());
-        return response()->json($category);
+        return response()->json([
+            'statusCode' => 200,
+            'message' => 'Category updated successfully.',
+            'data' => $category,
+        ]);
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return response()->json(['message' => 'Category deleted']);
+        return response()->json([
+            'statusCode' => 200,
+            'message' => 'Category deleted.'
+        ]);
     }
 }
