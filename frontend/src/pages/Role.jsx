@@ -1,33 +1,79 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
-import RoleForm from '../components/forms/RoleForm'; // Don't forget to import the form!
+
+import RoleForm from '../components/forms/RoleForm';
+import AlertConfirm from '../components/global/AlertConfirm';
+import AlertMessage from '../components/global/AlertMessage';
 import DynamicTable from '../components/global/DynamicTable';
 import Modal from '../components/global/Modal';
 import MyButton from '../components/global/MyButton';
-
-const mockRoles = [
-    { id: 1, code: 'adm', name: 'Admin' },
-    { id: 2, code: 'usr', name: 'User' },
-];
 
 export default function Role() {
     const [roles, setRoles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [alert, setAlert] = useState(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [selectedRole, setSelectedRole] = useState(null);
+    const [editingRole, setEditingRole] = useState(null);
 
-    useEffect(() => {
-        // Simulate fetch
-        setTimeout(() => {
-            setRoles(mockRoles);
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    const fetchRoles = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`${apiUrl}/roles`);
+            setRoles(res.data);
+        } catch (error) {
+            console.error(error);
+            setAlert({ message: 'Failed to load roles.', type: 'error' });
+        } finally {
             setLoading(false);
-        }, 1000);
-    }, []);
-
-    const handleEdit = (role) => {
-        console.log('Edit role:', role);
+        }
     };
 
+    useEffect(() => {
+        fetchRoles();
+    }, []);
+
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
+
+    const handleEdit = (role) => {
+        setEditingRole(role);
+        setIsModalOpen(true);
+    };
+
+
     const handleDelete = (role) => {
-        console.log('Delete role:', role);
+        setSelectedRole(role);
+        setConfirmOpen(true);
+    };
+
+
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`${apiUrl}/roles/${selectedRole.id}`);
+            setAlert({ message: 'Role deleted successfully.', type: 'success' });
+            fetchRoles();
+        } catch (error) {
+            console.error(error);
+            setAlert({ message: 'Failed to delete role.', type: 'error' });
+        } finally {
+            setSelectedRole(null);
+        }
+    };
+
+
+    const handleFormSubmit = ({ message, type, data }) => {
+        setAlert({ message, type });
+        setIsModalOpen(false);
+        fetchRoles(); // Reload roles after adding
     };
 
     return (
@@ -35,7 +81,7 @@ export default function Role() {
             <div className="primary-container">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-xl font-bold">Roles</h1>
-                    <MyButton className="w-auto px-4 py-2 text-sm" onClick={() => setIsModalOpen(true)}>
+                    <MyButton className="w-fit px-4 py-2 text-sm" onClick={() => setIsModalOpen(true)}>
                         Add Role
                     </MyButton>
                 </div>
@@ -49,9 +95,42 @@ export default function Role() {
                     onDelete={handleDelete}
                 />
 
-                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                    <RoleForm />
+                <Modal isOpen={isModalOpen} onClose={() => {
+                    setIsModalOpen(false);
+                    setEditingRole(null);
+                }}>
+                    <RoleForm
+                        initialData={editingRole}
+                        onSubmitSuccess={handleFormSubmit}
+                        onClose={() => {
+                            setIsModalOpen(false);
+                            setEditingRole(null);
+                        }}
+                    />
                 </Modal>
+
+
+                {alert && (
+                    <AlertMessage
+                        message={alert.message}
+                        type={alert.type}
+                        onClose={() => setAlert(null)}
+                    />
+                )}
+
+                <AlertConfirm
+                    isOpen={confirmOpen}
+                    onClose={() => {
+                        setConfirmOpen(false);
+                        setSelectedRole(null);
+                    }}
+                    onConfirm={confirmDelete}
+                    title="Confirm Delete"
+                    message={`Are you sure you want to delete "${selectedRole?.name}"?`}
+                    confirmText="Yes, Delete"
+                    cancelText="Cancel"
+                />
+
             </div>
         </section>
     );

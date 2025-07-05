@@ -45,8 +45,8 @@ export default function DynamicTable<T extends { id: number | string }>({
                             </td>
                         </tr>
                     ) : (
-                        data.map((item) => (
-                            <tr key={item.id} className="hover:bg-brand-50">
+                        data.map((item, index) => (
+                            <tr key={index} className="hover:bg-brand-50">
                                 {keys.map((key) => (
                                     <td
                                         key={String(key)}
