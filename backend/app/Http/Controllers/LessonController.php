@@ -12,7 +12,7 @@ class LessonController extends Controller
 {
     public function index()
     {
-        $lessons = Lesson::with('files')->get();
+        $lessons = Lesson::with(['files', 'category'])->get();
 
         return response()->json([
             'statusCode' => 200,
@@ -24,27 +24,28 @@ class LessonController extends Controller
     public function store(StoreLessonRequest $request)
     {
         $lesson = DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-            // Create the lesson
-            $lesson = Lesson::create($request->validated());
+            // Create the lesson with category_id
+            $lesson = Lesson::create($validated);
 
-            // Store the uploaded file
-            $file = $request->file('file');
-            $path = $file->store('lesson_files', 'public');
+            // Handle file upload
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $path = $file->store('lesson_files', 'public');
 
-            // Attach the file to the lesson
-            $lesson->files()->create([
-                'name' => $file->getClientOriginalName(),
-                'path' => $path,
-                'mime_type' => $file->getClientMimeType(),
-                'size' => $file->getSize(),
-            ]);
+                $lesson->files()->create([
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $path,
+                    'mime_type' => $file->getClientMimeType(),
+                    'size' => $file->getSize(),
+                ]);
+            }
 
-            return $lesson; // return the created lesson so you can use it later
+            return $lesson;
         });
 
-        // Load the files relationship for the response
-        $lesson->load('files');
+        $lesson->load(['files', 'category']);
 
         return response()->json([
             'statusCode' => 200,
@@ -53,10 +54,9 @@ class LessonController extends Controller
         ]);
     }
 
-
     public function show(Lesson $lesson)
     {
-        $lesson->load('files');
+        $lesson->load(['files', 'category']);
 
         return response()->json([
             'statusCode' => 200,
@@ -65,16 +65,15 @@ class LessonController extends Controller
         ]);
     }
 
-
     public function update(UpdateLessonRequest $request, Lesson $lesson)
     {
         $lesson = DB::transaction(function () use ($request, $lesson) {
+            $validated = $request->validated();
 
-            $lesson->update($request->validated());
+            $lesson->update($validated);
 
             if ($request->hasFile('file')) {
-
-                // Delete all existing files
+                // Delete existing files
                 $lesson->files->each(function ($oldFile) {
                     Storage::disk('public')->delete($oldFile->path);
                     $oldFile->delete();
@@ -95,23 +94,12 @@ class LessonController extends Controller
             return $lesson;
         });
 
-        $lesson->load('files');
+        $lesson->load(['files', 'category']);
 
         return response()->json([
             'statusCode' => 200,
             'message' => 'Lesson updated successfully.',
             'data' => $lesson,
-        ]);
-    }
-
-
-
-    public function destroy(Lesson $lesson)
-    {
-        $lesson->delete();
-        return response()->json([
-            'statusCode' => 200,
-            'message' => 'Lesson deleted.'
         ]);
     }
 }

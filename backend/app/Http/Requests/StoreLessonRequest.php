@@ -22,6 +22,7 @@ class StoreLessonRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'category_id' => ['required', 'exists:categories,id'],
             'slug' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],

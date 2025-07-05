@@ -13,6 +13,7 @@ class Lesson extends Model
         'slug',
         'title',
         'description',
+        'category_id'
     ];
 
     /**
@@ -26,5 +27,10 @@ class Lesson extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_lesson');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

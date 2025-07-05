@@ -19,4 +19,9 @@ class Category extends Model
     {
         return $this->belongsToMany(User::class, 'user_category');
     }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
 }
