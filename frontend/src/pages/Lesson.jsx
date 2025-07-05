@@ -7,7 +7,6 @@ import DynamicTable from '../components/global/DynamicTable';
 import Modal from '../components/global/Modal';
 import MyButton from '../components/global/MyButton';
 
-
 export default function Lesson() {
     const [lessons, setLessons] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,15 +16,13 @@ export default function Lesson() {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedLesson, setSelectedLesson] = useState(null);
 
-
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const fetchLessons = async () => {
         try {
             setLoading(true);
             const res = await axios.get(`${apiUrl}/lessons`);
-            console.log('Fetched lessons:', res.data); // For debug
-            setLessons(res.data.data);  // ✅ Get the actual array
+            setLessons(res.data.data);
         } catch (error) {
             console.error(error);
             setAlert({ message: 'Failed to load lessons.', type: 'error' });
@@ -35,7 +32,6 @@ export default function Lesson() {
         }
     };
 
-
     useEffect(() => {
         fetchLessons();
     }, []);
@@ -43,13 +39,6 @@ export default function Lesson() {
     const handleEdit = (lesson) => {
         setEditingLesson(lesson);
         setIsModalOpen(true);
-    };
-
-    const handleFormSubmit = ({ message, type }) => {
-        setAlert({ message, type });
-        setIsModalOpen(false);
-        setEditingLesson(null);
-        fetchLessons(); // Refresh the list
     };
 
     const handleDelete = (lesson) => {
@@ -71,6 +60,12 @@ export default function Lesson() {
         }
     };
 
+    const handleFormSubmit = ({ message, type }) => {
+        setAlert({ message, type });
+        setIsModalOpen(false);
+        setEditingLesson(null);
+        fetchLessons();
+    };
 
     return (
         <section>
@@ -83,14 +78,13 @@ export default function Lesson() {
                 </div>
 
                 <DynamicTable
-                    titles={['Title', 'Description', 'File Name']}
+                    titles={['Title', 'Category', 'Description', 'File Name']}
                     data={lessons}
-                    keys={['title', 'description', 'files']}
+                    keys={['title', 'category.name', 'description', 'files']}
                     loading={loading}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
                 />
-
 
                 <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingLesson(null); }}>
                     <LessonForm
@@ -112,7 +106,6 @@ export default function Lesson() {
                     confirmText="Yes, Delete"
                     cancelText="Cancel"
                 />
-
 
                 {alert && (
                     <AlertMessage

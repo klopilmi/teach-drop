@@ -40,15 +40,29 @@ export default function StudentHome() {
 
             <div className="flex flex-col gap-4">
                 {lessons.map((lesson) => (
-                    <div key={lesson.id} className="flex flex-col gap-4 w-full p-4 border rounded-lg shadow-sm bg-white">
-                        <h2 className="text-lg font-bold text-brand-500 border-b pb-2">{lesson.title}</h2>
-                        <span className="text-sm text-gray-600 line-clamp-2"> <b>Description:</b> <p className='mt-2 p-2 bg-brand-50'>
-                            {lesson.description}
-                        </p></span>
+                    <div
+                        key={lesson.id}
+                        className="flex flex-col gap-4 w-full p-4 border rounded-lg shadow-sm bg-white"
+                    >
+
+                        <h2 className="text-lg font-bold text-brand-500 border-b pb-2">
+                            {lesson.title}
+                        </h2>
+
+                        <span className="w-fit px-2 py-1 bg-brand-100 text-brand-600 text-xs rounded-full">
+                            {lesson.category?.name || 'No Category'}
+                        </span>
+
+                        <span className="text-sm text-gray-600 line-clamp-2">
+                            <b>Description:</b>
+                            <p className="mt-2 p-2 bg-brand-50">{lesson.description}</p>
+                        </span>
+
                         <p className="text-xs text-gray-500">
                             <b>Material:</b> {lesson.files?.[0]?.name || 'No file'}
                         </p>
-                        <div className="mt-1 w-full flex justify-end">
+
+                        <div className="w-full flex justify-end">
                             <MyButton
                                 className="text-sm p-1 px-2"
                                 onClick={() => fetchLessonDetails(lesson.id)}
@@ -63,8 +77,16 @@ export default function StudentHome() {
             <Modal isOpen={!!selectedLesson} onClose={() => setSelectedLesson(null)}>
                 {selectedLesson && (
                     <div className="max-w-md mx-auto">
-                        <h2 className="text-xl font-bold mb-2 border-b pb-2 text-brand-500">{selectedLesson.title}</h2>
-                        <div className="mb-4">
+
+                        <h2 className="text-xl font-bold border-b pb-2 text-brand-500 mb-2">
+                            {selectedLesson.title}
+                        </h2>
+
+                        <span className="px-2 py-1 bg-brand-100 text-brand-600 text-xs rounded-full">
+                            {selectedLesson.category?.name || 'No Category'}
+                        </span>
+
+                        <div className="mb-4 mt-6">
                             <label className="text-sm text-gray-600 font-bold">Description:</label>
                             <textarea
                                 value={selectedLesson.description}
@@ -74,11 +96,12 @@ export default function StudentHome() {
                             />
                         </div>
 
-                        <div className="flex justify-between align-center text-sm text-gray-600 mb-4">
-                            <b>Material:</b>  {selectedLesson.files?.[0]?.name || 'No file attached'}
+                        <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
+                            <b>Material:</b>
+                            {selectedLesson.files?.[0]?.name || 'No file attached'}
+
                             {selectedLesson.files?.[0]?.path && (
                                 <a
-
                                     href={`${apiUrl.replace('/api', '')}/storage/${selectedLesson.files[0].path}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -88,7 +111,6 @@ export default function StudentHome() {
                                 </a>
                             )}
                         </div>
-
                     </div>
                 )}
             </Modal>

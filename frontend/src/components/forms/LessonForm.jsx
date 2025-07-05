@@ -12,17 +12,31 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
     });
     const [file, setFile] = useState(null);
     const [alert, setAlert] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(initialData?.category_id || '');
 
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    // Auto-generate slug from title
+    // Slug generator
     const toKebabCase = (str) =>
-        str
-            .toLowerCase()
-            .replace(/[^a-z0-9\s]/g, '')
-            .trim()
-            .replace(/\s+/g, '-');
+        str.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '-');
 
+    // Fetch categories
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get(`${apiUrl}/categories`);
+                setCategories(res.data.data ?? res.data);
+            } catch (error) {
+                console.error('Failed to fetch categories', error);
+                setAlert({ message: 'Failed to load categories.', type: 'error' });
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
+    // Initialize form data if editing
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -30,17 +44,16 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
                 title: initialData.title,
                 description: initialData.description,
             });
+            setSelectedCategory(initialData.category_id);
         }
     }, [initialData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         const updatedData = { ...formData, [name]: value };
-
         if (name === 'title' && !initialData) {
             updatedData.slug = toKebabCase(value);
         }
-
         setFormData(updatedData);
     };
 
@@ -55,6 +68,7 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
             data.append('slug', formData.slug);
             data.append('title', formData.title);
             data.append('description', formData.description);
+            data.append('category_id', selectedCategory);
             if (file) data.append('file', file);
 
             if (initialData) {
@@ -79,6 +93,7 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
             {/* Hidden slug field */}
             <input type="hidden" name="slug" value={formData.slug} />
 
+            {/* Title */}
             <InputField
                 label="Title"
                 name="title"
@@ -87,6 +102,27 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
                 onChange={handleChange}
             />
 
+            {/* Category */}
+            <div className="mb-4">
+                <label className="block text-[#22577A] font-semibold mb-1" htmlFor="category">Category</label>
+                <select
+                    id="category"
+                    name="category"
+                    required
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-400 transition"
+                >
+                    <option value="" disabled>Select a category</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                            {category.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Description */}
             <div className="mb-4">
                 <label className="block text-[#22577A] font-semibold mb-1" htmlFor="description">Description</label>
                 <textarea
@@ -101,6 +137,7 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
                 />
             </div>
 
+            {/* File upload */}
             <div className="mb-4">
                 <label className="block text-[#22577A] font-semibold mb-1">Attach File</label>
                 <div className="flex items-center gap-4 flex-wrap">

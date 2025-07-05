@@ -1,7 +1,12 @@
+// Helper to get nested properties (e.g., category.name ➔ item.category.name)
+function getNestedValue(obj: any, keyPath: string): any {
+    return keyPath.split('.').reduce((acc, key) => acc?.[key], obj);
+}
+
 type DynamicTableProps<T extends { id: number | string }> = {
     titles: string[];
     data: T[];
-    keys: (keyof T | string)[]; // Allow string keys to handle nested properties
+    keys: (keyof T | string)[];
     loading?: boolean;
     onEdit: (item: T) => void;
     onDelete: (item: T) => void;
@@ -21,10 +26,7 @@ export default function DynamicTable<T extends { id: number | string }>({
                 <thead className="bg-brand-100">
                     <tr>
                         {titles.map((title) => (
-                            <th
-                                key={title}
-                                className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-brand-500"
-                            >
+                            <th key={title} className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-brand-500">
                                 {title}
                             </th>
                         ))}
@@ -49,24 +51,25 @@ export default function DynamicTable<T extends { id: number | string }>({
                     ) : (
                         data.map((item) => (
                             <tr key={item.id} className="hover:bg-brand-50">
-                                {keys.map((key) => (
-                                    <td
-                                        key={String(key)}
-                                        className="border border-gray-200 px-4 py-2 text-sm text-gray-700"
-                                    >
-                                        {(() => {
-                                            const value = item[key as keyof T];
+                                {keys.map((key) => {
+                                    const value = getNestedValue(item, key as string);
 
-                                            // Special handling for 'files'
-                                            if (key === 'files' && Array.isArray(value)) {
-                                                return value[0]?.name ?? 'No File';
-                                            }
+                                    return (
+                                        <td
+                                            key={String(key)}
+                                            className="border border-gray-200 px-4 py-2 text-sm text-gray-700"
+                                        >
+                                            {(() => {
+                                                // Special handling for 'files'
+                                                if (key === 'files' && Array.isArray(value)) {
+                                                    return value[0]?.name ?? 'No File';
+                                                }
 
-                                            // Default to string conversion
-                                            return String(value ?? '');
-                                        })()}
-                                    </td>
-                                ))}
+                                                return String(value ?? '');
+                                            })()}
+                                        </td>
+                                    );
+                                })}
                                 <td className="border border-gray-200 px-4 py-2 space-x-2">
                                     <button
                                         onClick={() => onEdit(item)}
