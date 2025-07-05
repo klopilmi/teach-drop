@@ -1,24 +1,23 @@
+import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AlertMessage from '../global/AlertMessage';
 import MyButton from '../global/MyButton';
 import InputField from './InputField';
 
 const rowFields = [
-    // Row 1: Name fields
     [
         { name: 'first_name', label: 'First Name', required: true },
         { name: 'middle_name', label: 'Middle Name' },
         { name: 'last_name', label: 'Last Name', required: true },
     ],
-    // Row 2: Birthdate, Contact, Gender (dropdown handled separately)
     [
         { name: 'birth_date', label: 'Birth Date', type: 'date', required: true },
         { name: 'contact_number', label: 'Contact Number', required: true },
     ],
-    // Row 3: Address
     [
         { name: 'address', label: 'Address', required: true, fullWidth: true },
     ],
-    // Row 4: Email, Password, Confirm Password
     [
         { name: 'email', label: 'Email', type: 'email', required: true },
         { name: 'password', label: 'Password', type: 'password', required: true, autoComplete: 'new-password' },
@@ -27,20 +26,43 @@ const rowFields = [
 ];
 
 export default function RegistrationForm() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState(
         rowFields.flat().reduce((acc, field) => ({ ...acc, [field.name]: '' }), { gender: '' })
     );
+    const [alert, setAlert] = useState(null);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (formData.password !== formData.confirm_password) {
+            setAlert({ message: 'Passwords do not match.', type: 'error' });
+            return;
+        }
+
+        try {
+            await axios.post(`${apiUrl}/users`, formData);
+            setAlert({ message: 'Registration successful!', type: 'success' });
+
+            setTimeout(() => {
+                navigate('/');
+            }, 1500);
+        } catch (error) {
+            console.error(error);
+            setAlert({ message: 'Failed to register. Please try again.', type: 'error' });
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <form onSubmit={(e) => { e.preventDefault(); console.log(formData); }} className="bg-white p-8 rounded-xl shadow-md w-full sm:max-w-[90%] lg:max-w-[80%]">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full sm:max-w-[90%] lg:max-w-[80%]">
                 <h2 className="text-2xl font-bold mb-6 text-brand-500 text-center">Register</h2>
 
-                {/* Loop rows */}
                 {rowFields.map((row, rowIndex) => (
                     <div key={rowIndex} className={`flex flex-col ${row.some(f => f.fullWidth) ? '' : 'md:flex-row'} gap-4 mb-4`}>
                         {row.map(({ name, label, type = 'text', required, placeholder, autoComplete, fullWidth }) => (
@@ -58,7 +80,6 @@ export default function RegistrationForm() {
                             </div>
                         ))}
 
-                        {/* Gender select in 2nd row */}
                         {rowIndex === 1 && (
                             <div className="flex-1">
                                 <label className="block text-[#22577A] font-semibold mb-1">Gender</label>
@@ -79,6 +100,16 @@ export default function RegistrationForm() {
                 ))}
 
                 <MyButton type="submit">Register</MyButton>
+
+                {alert && (
+                    <div className="mt-4">
+                        <AlertMessage
+                            message={alert.message}
+                            type={alert.type}
+                            onClose={() => setAlert(null)}
+                        />
+                    </div>
+                )}
             </form>
         </div>
     );

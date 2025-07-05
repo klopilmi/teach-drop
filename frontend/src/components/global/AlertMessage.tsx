@@ -16,7 +16,7 @@ export default function AlertMessage({ message, type = 'success', onClose }) {
     };
 
     return (
-        <div className={`fixed bottom-16 right-10 px-4 py-3 rounded-lg shadow-lg transition-opacity border border-green-500 ${typeColors[type]}`}>
+        <div className={`fixed bottom-16 right-10 px-4 py-3 rounded-lg shadow-lg transition-opacity ${typeColors[type]}`}>
             {message}
         </div>
     );
