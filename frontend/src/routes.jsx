@@ -1,5 +1,5 @@
 import About from './pages/About';
-// import Categories from './pages/Categories';
+import Category from './pages/Category';
 import Home from './pages/Home';
 import Register from './pages/Register';
 // import Lessons from './pages/Lessons';
@@ -29,14 +29,14 @@ const routes = [
   //     </RoleGuard>
   //   ),
   // },
-  // {
-  //   path: '/categories',
-  //   element: (
-  //     <RoleGuard allowedRoles={['admin']} userRole={userRole}>
-  //       <Categories />
-  //     </RoleGuard>
-  //   ),
-  // },
+  {
+    path: '/categories',
+    element: (
+      // <RoleGuard allowedRoles={['admin']} userRole={userRole}>
+        <Category />
+      // </RoleGuard>
+    ),
+  },
 ];
 
 export default routes;
