@@ -2,6 +2,7 @@ import About from './pages/About';
 import Category from './pages/Category';
 import Home from './pages/Home';
 import Register from './pages/Register';
+import Role from './pages/Role';
 // import Lessons from './pages/Lessons';
 // import Users from './pages/Users';
 
@@ -34,6 +35,14 @@ const routes = [
     element: (
       // <RoleGuard allowedRoles={['admin']} userRole={userRole}>
         <Category />
+      // </RoleGuard>
+    ),
+  },
+  {
+    path: '/roles',
+    element: (
+      // <RoleGuard allowedRoles={['admin']} userRole={userRole}>
+        <Role />
       // </RoleGuard>
     ),
   },
