@@ -22,4 +22,9 @@ class Lesson extends Model
     {
         return $this->morphMany(File::class, 'fileable');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_lesson');
+    }
 }

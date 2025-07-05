@@ -14,4 +14,9 @@ class Category extends Model
         'code',
         'name'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_category');
+    }
 }
