@@ -23,18 +23,27 @@ class LessonController extends Controller
 
     public function store(StoreLessonRequest $request)
     {
-        $lesson = Lesson::create($request->validated());
+        $lesson = DB::transaction(function () use ($request) {
 
-        $file = $request->file('file');
-        $path = $file->store('lesson_files', 'public');
+            // Create the lesson
+            $lesson = Lesson::create($request->validated());
 
-        $lesson->files()->create([
-            'name' => $file->getClientOriginalName(),
-            'path' => $path,
-            'mime_type' => $file->getClientMimeType(),
-            'size' => $file->getSize(),
-        ]);
+            // Store the uploaded file
+            $file = $request->file('file');
+            $path = $file->store('lesson_files', 'public');
 
+            // Attach the file to the lesson
+            $lesson->files()->create([
+                'name' => $file->getClientOriginalName(),
+                'path' => $path,
+                'mime_type' => $file->getClientMimeType(),
+                'size' => $file->getSize(),
+            ]);
+
+            return $lesson; // return the created lesson so you can use it later
+        });
+
+        // Load the files relationship for the response
         $lesson->load('files');
 
         return response()->json([
@@ -59,25 +68,22 @@ class LessonController extends Controller
 
     public function update(UpdateLessonRequest $request, Lesson $lesson)
     {
-
         $lesson = DB::transaction(function () use ($request, $lesson) {
 
-            // 1. Update lesson fields
             $lesson->update($request->validated());
 
-            // 2. If there's a file, replace the old one
             if ($request->hasFile('file')) {
 
-                $oldFile = $lesson->files()->first();
-                if ($oldFile) {
+                // Delete all existing files
+                $lesson->files->each(function ($oldFile) {
                     Storage::disk('public')->delete($oldFile->path);
                     $oldFile->delete();
-                }
+                });
 
+                // Save the new file
                 $file = $request->file('file');
                 $path = $file->store('lesson_files', 'public');
 
-                // Save the new file as a new record (since the old file is deleted)
                 $lesson->files()->create([
                     'name' => $file->getClientOriginalName(),
                     'path' => $path,
@@ -97,6 +103,7 @@ class LessonController extends Controller
             'data' => $lesson,
         ]);
     }
+
 
 
     public function destroy(Lesson $lesson)
