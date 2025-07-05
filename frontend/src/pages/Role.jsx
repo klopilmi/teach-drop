@@ -87,7 +87,7 @@ export default function Role() {
                 </div>
 
                 <DynamicTable
-                    titles={['Code', 'Name', 'Actions']}
+                    titles={['Code', 'Name']}
                     data={roles}
                     keys={['code', 'name']}
                     loading={loading}

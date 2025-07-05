@@ -11,7 +11,7 @@ export default function MyButton({
     return (
         <button
             type={type}
-            className={`w-full bg-brand-400 hover:bg-brand-500 text-white py-2 rounded-lg mt-6 transition ${className}`}
+            className={`bg-brand-400 hover:bg-brand-500 text-white p-2 rounded-lg mt-6 transition ${className}`}
             {...props}
         >
             {children}

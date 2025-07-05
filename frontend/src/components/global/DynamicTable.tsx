@@ -1,8 +1,7 @@
-
 type DynamicTableProps<T extends { id: number | string }> = {
     titles: string[];
     data: T[];
-    keys: (keyof T)[];
+    keys: (keyof T | string)[]; // Allow string keys to handle nested properties
     loading?: boolean;
     onEdit: (item: T) => void;
     onDelete: (item: T) => void;
@@ -29,30 +28,43 @@ export default function DynamicTable<T extends { id: number | string }>({
                                 {title}
                             </th>
                         ))}
+                        <th className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-brand-500">
+                            Actions
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {loading ? (
                         <tr>
-                            <td colSpan={titles.length} className="text-center py-4 text-gray-500">
+                            <td colSpan={titles.length + 1} className="text-center py-4 text-gray-500">
                                 Data is loading...
                             </td>
                         </tr>
                     ) : data.length === 0 ? (
                         <tr>
-                            <td colSpan={titles.length} className="text-center py-4 text-gray-500">
+                            <td colSpan={titles.length + 1} className="text-center py-4 text-gray-500">
                                 This list is empty.
                             </td>
                         </tr>
                     ) : (
-                        data.map((item, index) => (
-                            <tr key={index} className="hover:bg-brand-50">
+                        data.map((item) => (
+                            <tr key={item.id} className="hover:bg-brand-50">
                                 {keys.map((key) => (
                                     <td
                                         key={String(key)}
                                         className="border border-gray-200 px-4 py-2 text-sm text-gray-700"
                                     >
-                                        {String(item[key])}
+                                        {(() => {
+                                            const value = item[key as keyof T];
+
+                                            // Special handling for 'files'
+                                            if (key === 'files' && Array.isArray(value)) {
+                                                return value[0]?.name ?? 'No File';
+                                            }
+
+                                            // Default to string conversion
+                                            return String(value ?? '');
+                                        })()}
                                     </td>
                                 ))}
                                 <td className="border border-gray-200 px-4 py-2 space-x-2">

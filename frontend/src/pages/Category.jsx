@@ -16,6 +16,7 @@ export default function Category() {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [editingCategory, setEditingCategory] = useState(null);
+    
 
     const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -84,7 +85,7 @@ export default function Category() {
                 </div>
 
                 <DynamicTable
-                    titles={['Code', 'Name', 'Actions']}
+                    titles={['Code', 'Name']}
                     data={categories}
                     keys={['code', 'name']}
                     loading={loading}

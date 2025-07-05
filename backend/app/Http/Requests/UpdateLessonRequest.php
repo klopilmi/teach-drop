@@ -22,7 +22,7 @@ class UpdateLessonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'string|max:10',
+            'slug' => 'string|max:255',
             'title' => 'string|max:255',
             'description' => 'string|max:255',
             'file' => ['file', 'mimes:pdf,doc,docx,ppt,pptx', 'max:20480'],
