@@ -22,9 +22,18 @@ class StoreLessonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'required|string|max:10',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'slug' => ['required', 'string', 'max:10'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:255'],
+            'file' => ['file', 'mimes:pdf,doc,docx,ppt,pptx', 'max:20480'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'file.required' => 'Please attach a lesson material.',
+            'file.mimes' => 'Only PDF, DOC, DOCX, PPT, and PPTX files are allowed.',
         ];
     }
 }

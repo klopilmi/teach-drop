@@ -12,16 +12,11 @@ return new class extends Migration {
             $table->string('name');          // File name
             $table->string('path')->nullable();   // File storage path
             $table->string('mime_type')->nullable(); // Example: application/pdf, application/msword
-            $table->unsignedBigInteger('size')->nullable(); // Optional: file size in bytes
-            $table->timestamps();
-            $table->softDeletes();
-        });
+            $table->unsignedBigInteger('size')->nullable(); // File size in bytes
 
-        Schema::create('fileables', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('file_id');
             $table->unsignedBigInteger('fileable_id');
             $table->string('fileable_type');
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,7 +24,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('fileables');
-        Schema::dropIfExists('files');   // corrected from "materials" to "files"
+        Schema::dropIfExists('files');
     }
 };

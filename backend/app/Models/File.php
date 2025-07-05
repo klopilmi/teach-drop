@@ -14,6 +14,8 @@ class File extends Model
         'path',
         'mime_type',
         'size',
+        'fileable_id',
+        'fileable_type',
     ];
 
     /**
