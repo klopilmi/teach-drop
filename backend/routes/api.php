@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 
@@ -22,3 +23,9 @@ Route::post('/users', [UserController::class, 'store']);
 Route::put('/users/{user}', [UserController::class, 'update']);
 Route::get('/users/{user}', [UserController::class, 'show']);
 Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+Route::get('/lessons', [LessonController::class, 'index']);
+Route::post('/lessons', [LessonController::class, 'store']);
+Route::put('/lessons/{lesson}', [LessonController::class, 'update']);
+Route::get('/lessons/{lesson}', [LessonController::class, 'show']);
+Route::delete('/lessons/{lesson}', [LessonController::class, 'destroy']);
