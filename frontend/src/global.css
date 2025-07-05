@@ -4,6 +4,7 @@
 
 body {
   font-family: Montserrat, sans-serif;
+  @apply bg-brand-50;
 }
 
 @font-face {
@@ -28,4 +29,8 @@ body {
   font-style: normal;
   font-weight: 700;
   src: url("/fonts/montserrat-v29-latin-700.woff2") format("woff2");
+}
+
+.primary-container {
+  @apply max-w-[1400px] w-full mx-auto max-2xl:px-[16px];
 }
