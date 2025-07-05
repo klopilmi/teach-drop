@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Lesson from './pages/Lesson';
 import Register from './pages/Register';
 import Role from './pages/Role';
+import StudentHome from './pages/StudentHome';
 // import Users from './pages/Users';
 
 const userRole = 'contributor'; // 'admin', 'student'
@@ -43,6 +44,14 @@ const routes = [
     element: (
       // <RoleGuard allowedRoles={['admin']} userRole={userRole}>
       <Role />
+      // </RoleGuard>
+    ),
+  },
+  {
+    path: '/home',
+    element: (
+      // <RoleGuard allowedRoles={['student']} userRole={userRole}>
+      <StudentHome />
       // </RoleGuard>
     ),
   },
