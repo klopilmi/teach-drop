@@ -2,11 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lesson extends Model
 {
-    /** @use HasFactory<\Database\Factories\LessonFactory> */
-    use HasFactory;
+    use SoftDeletes;
+
+    protected $fillable = [
+        'slug',
+        'title',
+        'description',
+    ];
+
+    /**
+     * A Lesson can have many files (PDF/PPT/DOCS).
+     */
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
 }
