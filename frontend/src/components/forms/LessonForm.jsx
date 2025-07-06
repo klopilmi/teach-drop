@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import api from '../../api/axios';
 import AlertMessage from '../global/AlertMessage';
 import MyButton from '../global/MyButton';
 import InputField from './InputField';
@@ -25,7 +25,7 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get(`${apiUrl}/categories`);
+                const res = await api.get(`/categories`);
                 setCategories(res.data.data ?? res.data);
             } catch (error) {
                 console.error('Failed to fetch categories', error);
@@ -72,10 +72,10 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
             if (file) data.append('file', file);
 
             if (initialData) {
-                await axios.post(`${apiUrl}/lessons/${initialData.id}?_method=PUT`, data);
+                await api.post(`/lessons/${initialData.id}?_method=PUT`, data);
                 onSubmitSuccess({ message: 'Lesson updated successfully!', type: 'success' });
             } else {
-                await axios.post(`${apiUrl}/lessons`, data);
+                await api.post(`/lessons`, data);
                 onSubmitSuccess({ message: 'Lesson added successfully!', type: 'success' });
             }
         } catch (error) {

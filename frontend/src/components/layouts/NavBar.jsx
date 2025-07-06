@@ -32,9 +32,9 @@ export default function Navbar() {
             </div>
 
             <div className="flex gap-4 items-center">
-                {user && user.role === 'contributor' && (
+                {/* {user && user.role === 'contributor' && (
                     <Link to="/contributor/lessons">My Lessons</Link>
-                )}
+                )} */}
 
                 {user && user.role === 'student' && (
                     <>

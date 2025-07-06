@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import api from '../../api/axios';
 import MyButton from '../global/MyButton';
 import InputField from './InputField';
 
@@ -33,17 +33,16 @@ export default function CategoryForm({ onSubmitSuccess, initialData = null, onCl
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const apiUrl = import.meta.env.VITE_API_URL;
 
         try {
             let res;
             if (initialData) {
                 // Update existing category
-                res = await axios.put(`${apiUrl}/categories/${initialData.id}`, formData);
+                res = await api.put(`/categories/${initialData.id}`, formData);
                 onSubmitSuccess({ message: 'Category updated successfully!', type: 'success', data: res.data });
             } else {
                 // Create new category
-                res = await axios.post(`${apiUrl}/categories`, formData);
+                res = await api.post(`/categories`, formData);
                 onSubmitSuccess({ message: 'Category added successfully!', type: 'success', data: res.data });
             }
             onClose();

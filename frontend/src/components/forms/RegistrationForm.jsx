@@ -98,11 +98,12 @@ export default function RegistrationForm() {
                         )}
                     </div>
                 ))}
-
-                <MyButton type="submit">Register</MyButton>
+                <div className='w-full flex justify-end'>
+                    <MyButton type="submit">Register</MyButton>
+                </div>
 
                 {alert && (
-                    <div className="mt-4">
+                    <div className="mt-4 ">
                         <AlertMessage
                             message={alert.message}
                             type={alert.type}

@@ -9,7 +9,7 @@ export default function StudentLayout({ children }) {
             </main>
 
             <footer className="bg-brand-100 p-2 text-center text-sm text-brand-500">
-                © {new Date().getFullYear()} TeachDrop - Student
+                © {new Date().getFullYear()} TeachDrop
             </footer>
         </div>
     );

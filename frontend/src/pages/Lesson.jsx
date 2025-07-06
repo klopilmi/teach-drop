@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../api/axios';
 import LessonForm from '../components/forms/LessonForm';
 import AlertConfirm from '../components/global/AlertConfirm';
 import AlertMessage from '../components/global/AlertMessage';
@@ -16,12 +17,10 @@ export default function Lesson() {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedLesson, setSelectedLesson] = useState(null);
 
-    const apiUrl = import.meta.env.VITE_API_URL;
-
     const fetchLessons = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`${apiUrl}/lessons`);
+            const res = await api.get(`/lessons`);
             setLessons(res.data.data);
         } catch (error) {
             console.error(error);
@@ -48,8 +47,7 @@ export default function Lesson() {
 
     const confirmDelete = async () => {
         try {
-            
-            await axios.delete(`${apiUrl}/lessons/${selectedLesson.id}`);
+            await api.delete(`/lessons/${selectedLesson.id}`);
             setAlert({ message: 'Lesson deleted successfully.', type: 'success' });
             fetchLessons();
         } catch (error) {
@@ -71,6 +69,12 @@ export default function Lesson() {
     return (
         <section>
             <div className="primary-container">
+                <div className="pt-6">
+                    <Link to="/dashboard" className="text-sm text-brand-400 underline hover:text-brand-500 transition-colors">
+                        ←   Back to Dashboard
+                    </Link>
+                </div>
+
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-xl font-bold">Lessons</h1>
                     <MyButton onClick={() => { setIsModalOpen(true); setEditingLesson(null); }} className="w-fit px-4 py-2 text-sm">

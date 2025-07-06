@@ -19,7 +19,7 @@ export default function InputField({ label, error, success, warning, ...props })
 
     return (
         <div className="mb-4">
-            {label && <label className="block text-[#22577A] font-semibold mb-1">{label}</label>}
+            {label && <label className="block text-[#22577A] font-semibold mb-1 text-left">{label}</label>}
             <input
                 {...props}
                 className={`w-full px-2 md:px-4 py-2 border ${borderColor} ${bgColor} rounded-lg focus:outline-none focus:ring-2 ${focusColor} transition  ${props.disabled ? 'bg-gray-100 text-gray-500' : 'bg-white'}`}

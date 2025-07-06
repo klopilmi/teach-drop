@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import LoginForm from "../components/forms/LoginForm";
 
 const Home = () => {
@@ -6,6 +7,10 @@ const Home = () => {
             <div className="primary-container text-center flex flex-col justify-center align-center gap-4">
                 <h1 className="w-full font-bold text-2xl">👋 Welcome to TeachDrop!</h1>
                 <span className="w-full text-center">🎉 Happy to have you here!</span>
+
+                <Link to="/about" className="text-sm text-brand-400 underline">
+                    About TeachDrop
+                </Link>
                 <LoginForm />
             </div>
         </section>

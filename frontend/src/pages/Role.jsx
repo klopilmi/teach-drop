@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+import api from '../api/axios';
 import RoleForm from '../components/forms/RoleForm';
 import AlertConfirm from '../components/global/AlertConfirm';
 import AlertMessage from '../components/global/AlertMessage';
@@ -17,13 +17,10 @@ export default function Role() {
     const [selectedRole, setSelectedRole] = useState(null);
     const [editingRole, setEditingRole] = useState(null);
 
-
-    const apiUrl = import.meta.env.VITE_API_URL;
-
     const fetchRoles = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`${apiUrl}/roles`);
+            const res = await api.get(`/roles`);
             setRoles(res.data);
         } catch (error) {
             console.error(error);
@@ -58,7 +55,7 @@ export default function Role() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`${apiUrl}/roles/${selectedRole.id}`);
+            await api.delete(`/roles/${selectedRole.id}`);
             setAlert({ message: 'Role deleted successfully.', type: 'success' });
             fetchRoles();
         } catch (error) {
@@ -79,6 +76,9 @@ export default function Role() {
     return (
         <section>
             <div className="primary-container">
+                <link to="/dashboard" className="text-sm text-brand-400 underline">
+                    Back to Dashboard
+                </link>
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-xl font-bold">Roles</h1>
                     <MyButton className="w-fit px-4 py-2 text-sm" onClick={() => setIsModalOpen(true)}>

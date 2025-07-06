@@ -6,7 +6,7 @@ export default function BaseLayout({ children }) {
             <Navbar />
             <main className="flex-grow p-4">{children}</main>
             <footer className="bg-brand-100 p-2 text-center text-sm text-brand-500">
-                © {new Date().getFullYear()} TeachDrop - Student
+                © {new Date().getFullYear()} TeachDrop
             </footer>
         </div>
     );

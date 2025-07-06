@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import api from '../../api/axios';
 import MyButton from '../global/MyButton';
 import InputField from './InputField';
 
@@ -37,11 +37,11 @@ export default function RoleForm({ onSubmitSuccess, initialData = null, onClose 
             let res;
             if (initialData) {
                 // Update role
-                res = await axios.put(`${apiUrl}/roles/${initialData.id}`, formData);
+                res = await api.put(`/roles/${initialData.id}`, formData);
                 onSubmitSuccess({ message: 'Role updated successfully!', type: 'success', data: res.data });
             } else {
                 // Add new role
-                res = await axios.post(`${apiUrl}/roles`, formData);
+                res = await api.post(`/roles`, formData);
                 onSubmitSuccess({ message: 'Role added successfully!', type: 'success', data: res.data });
             }
             onClose(); // Close modal

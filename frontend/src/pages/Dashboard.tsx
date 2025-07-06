@@ -6,12 +6,13 @@ export default function Dashboard() {
 
     const roleRoutes = {
         admin: [
-            { path: '/categories', label: 'Categories', color: 'bg-blue-500' },
-            { path: '/lessons', label: 'Lessons', color: 'bg-green-500' },
-            { path: '/roles', label: 'Roles', color: 'bg-purple-500' },
+            { path: '/categories', label: 'Manage Categories', color: 'bg-blue-500' },
+            { path: '/lessons', label: 'Manage Lessons', color: 'bg-green-500' },
+            { path: '/roles', label: 'Manage Roles', color: 'bg-purple-500' },
+
         ],
         contributor: [
-            { path: '/lessons', label: 'Lessons', color: 'bg-green-500' },
+            { path: '/lessons', label: 'Manage Lessons', color: 'bg-green-500' },
         ],
     };
 
@@ -19,11 +20,11 @@ export default function Dashboard() {
 
     return (
         <div>
-            <h1 className="text-xl font-bold mb-4">Hi, welcome to your dashboard</h1>
-            <div className="flex flex-wrap">
+            <h1 className="bg-brand-100 text-xl font-bold mb-4 rounded text-brand-500 p-[40px]"> 👋 Hello there! 🚀 Welcome to your dashboard 🎉</h1>
+            <div className="flex flex-wrap justify-evenly">
                 {buttons.map(({ path, label, color }) => (
                     <Link key={path} to={path} className="m-2">
-                        <button className={`p-2 text-white rounded ${color}`}>
+                        <button className={`p-12 text-white text-lg rounded  w-[200px] ${color}`}>
                             {label}
                         </button>
                     </Link>

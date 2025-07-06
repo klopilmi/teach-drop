@@ -5,7 +5,7 @@ export const aboutData = {
         "User Roles: Admin, Contributor, Student",
         "Lesson Management: Upload, update, and download lesson materials (PDF, DOCX, PPT)",
         "Role-based Access Control:",
-        "    - Admin: manage users & categories",
+        "    - Admin: manage users, roles, lessons & categories",
         "    - Contributor: manage lessons",
         "    - Student: view & download lessons",
         "Secure File Uploads: Stored in the server with proper access rules",

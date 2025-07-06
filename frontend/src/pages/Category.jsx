@@ -1,6 +1,7 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+import { Link } from 'react-router-dom';
+import api from '../api/axios';
 import CategoryForm from '../components/forms/CategoryForm';
 import AlertConfirm from '../components/global/AlertConfirm';
 import AlertMessage from '../components/global/AlertMessage';
@@ -16,14 +17,12 @@ export default function Category() {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [editingCategory, setEditingCategory] = useState(null);
-    
 
-    const apiUrl = import.meta.env.VITE_API_URL;
 
     const fetchCategories = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`${apiUrl}/categories`);
+            const res = await api.get(`/categories`);
             setCategories(res.data);
         } catch (error) {
             console.error(error);
@@ -56,7 +55,7 @@ export default function Category() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`${apiUrl}/categories/${selectedCategory.id}`);
+            await api.delete(`/categories/${selectedCategory.id}`);
             setAlert({ message: 'Category deleted successfully.', type: 'success' });
             fetchCategories();
         } catch (error) {
@@ -68,7 +67,7 @@ export default function Category() {
         }
     };
 
-    const handleFormSubmit = ({ message, type, data }) => {
+    const handleFormSubmit = ({ message, type }) => {
         setAlert({ message, type });
         setIsModalOpen(false);
         fetchCategories();
@@ -77,6 +76,13 @@ export default function Category() {
     return (
         <section>
             <div className="primary-container">
+
+                <div className="pt-6">
+                    <Link to="/dashboard" className="text-sm text-brand-400 underline hover:text-brand-500 transition-colors">
+                        ←   Back to Dashboard
+                    </Link>
+                </div>
+
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-xl font-bold">Categories</h1>
                     <MyButton className="w-fit px-4 py-2 text-sm" onClick={() => setIsModalOpen(true)}>
