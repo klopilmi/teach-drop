@@ -15,7 +15,7 @@ export default function RoleForm({ onSubmitSuccess, initialData = null, onClose 
         }
     }, [initialData]);
 
-    const generateCode = (name) => name.toLowerCase().replace(/[aeiou\s]/g, '');
+    const generateCode = (name) => name.toLowerCase().replace(/\s+/g, '-');
 
     const handleChange = (e) => {
         const { name, value } = e.target;

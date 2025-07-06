@@ -36,15 +36,10 @@ class RegistrationController extends Controller
             ]);
 
             $user->roles()->attach([$role->id]);
-            // dd($user->roles()->get());
 
             DB::commit();
 
-            $token = $user->createToken('Personal Access Token')->accessToken;
-
             return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
                 'user' => $user,
             ], 200);
         } catch (\Exception $e) {
