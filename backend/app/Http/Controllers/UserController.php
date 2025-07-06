@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -46,5 +47,23 @@ class UserController extends Controller
             'statusCode' => 200,
             'message' => 'User deleted.'
         ]);
+    }
+
+    public function updateProfile(UpdateUserRequest $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->update($request->only([
+            'first_name',
+            'middle_name',
+            'last_name',
+            'birth_date',
+            'contact_number',
+            'address',
+            'gender',
+        ]));
+
+        return response()->json(['message' => 'Profile updated successfully', 'user' => $user]);
     }
 }

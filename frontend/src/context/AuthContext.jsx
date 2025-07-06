@@ -1,21 +1,22 @@
+import Cookies from 'js-cookie';
 import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(() => Cookies.get('TOKEN') || null);
 
     const login = (userData, tokenData) => {
         setUser(userData);
         setToken(tokenData);
-        localStorage.setItem('token', tokenData);
+        Cookies.set('TOKEN', tokenData, { expires: 7 }); // expires in 7 days
     };
 
     const logout = () => {
         setUser(null);
         setToken(null);
-        localStorage.removeItem('token');
+        Cookies.remove('TOKEN'); // this was previously 'token'
     };
 
     return (
