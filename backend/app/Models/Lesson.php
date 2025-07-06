@@ -16,7 +16,8 @@ class Lesson extends Model
         'slug',
         'title',
         'description',
-        'category_id'
+        'category_id',
+        'user_id', 
     ];
 
     /**
@@ -27,10 +28,11 @@ class Lesson extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
-    public function users(): BelongsToMany
+    public function user(): BelongsTo
     {
-        return $this->belongsToMany(User::class, 'user_lesson');
+        return $this->belongsTo(User::class);
     }
+
 
     public function category(): BelongsTo
     {

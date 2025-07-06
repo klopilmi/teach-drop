@@ -85,7 +85,7 @@ export default function Lesson() {
                 <DynamicTable
                     titles={['Title', 'Category', 'Description', 'File Name']}
                     data={lessons}
-                    keys={['title', 'category.name', 'description', 'files']}
+                    keys={['title', 'category.name', 'description', 'files',]}
                     loading={loading}
                     onEdit={handleEdit}
                     onDelete={handleDelete}

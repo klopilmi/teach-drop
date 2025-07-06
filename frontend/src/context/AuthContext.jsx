@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import api from '../api/axios';
 
 const AuthContext = createContext();
@@ -7,6 +7,21 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(() => Cookies.get('TOKEN') || null);
+
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const response = await api.get('/auth/user');;
+                console.log(response);
+                setUser(response.data)
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        loadUser();
+    }, []);
+    console.log("ah", user);
 
     const login = (userData, tokenData) => {
         setUser(userData);
@@ -26,6 +41,7 @@ export function AuthProvider({ children }) {
             Cookies.remove('TOKEN');
         }
     };
+
     return (
         <AuthContext.Provider value={{ user, token, login, logout }}>
             {children}

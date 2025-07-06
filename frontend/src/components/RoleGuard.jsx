@@ -3,13 +3,13 @@ import { useAuth } from '../context/AuthContext';
 
 export default function RoleGuard({ allowedRoles, children }) {
   const { user, loading } = useAuth();
+  
 
   if (loading) {
     return <div>Loading...</div>; // Optional loading state
   }
 
   if (!user) {
-    // Not logged in
     return <Navigate to="/" replace />;
   }
 
@@ -17,6 +17,7 @@ export default function RoleGuard({ allowedRoles, children }) {
     // Logged in but unauthorized
     return <Navigate to="/profile" replace />;
   }
+
 
   return children;
 }

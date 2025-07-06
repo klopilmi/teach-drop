@@ -71,15 +71,19 @@ export default function LessonForm({ onSubmitSuccess, initialData = null, onClos
             data.append('category_id', selectedCategory);
             if (file) data.append('file', file);
 
+            let response;
             if (initialData) {
-                await api.post(`/lessons/${initialData.id}?_method=PUT`, data);
-                onSubmitSuccess({ message: 'Lesson updated successfully!', type: 'success' });
+                response = await api.post(`/lessons/${initialData.id}?_method=PUT`, data);
+                console.log('Update Response:', response.data);
+                onSubmitSuccess({ message: response.data.message, type: response.data.type });
             } else {
-                await api.post(`/lessons`, data);
+                response = await api.post(`/lessons`, data);
+                console.log('Create Response:', response.data);
                 onSubmitSuccess({ message: 'Lesson added successfully!', type: 'success' });
             }
+
         } catch (error) {
-            console.error(error);
+            console.error('Error Response:', error.response?.data || error.message);
             setAlert({ message: 'Failed to save lesson.', type: 'error' });
         }
     };

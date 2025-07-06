@@ -13,7 +13,7 @@ class LessonController extends Controller
 {
     public function index()
     {
-        $lessons = Lesson::with(['files', 'category'])->get();
+        $lessons = Lesson::with(['files', 'category', 'user'])->get();
 
         return response()->json([
             'statusCode' => 200,
@@ -24,11 +24,23 @@ class LessonController extends Controller
 
     public function store(StoreLessonRequest $request)
     {
+        if (auth()->user()->roles[0]->code == 'student') {
+            return response()->json([
+                'statusCode' => 401,
+                'message' => 'Not a contributor.',
+            ]);
+        }
         $lesson = DB::transaction(function () use ($request) {
             $validated = $request->validated();
-
             // Create the lesson with category_id
-            $lesson = Lesson::create($validated);
+
+            $lesson = Lesson::create([
+                'category_id' => $request->category_id,
+                'slug' => $request->slug,
+                'title' => $request->title,
+                'description' => $request->description,
+                'user_id' => auth()->user()->id
+            ]);
 
             // Handle file upload
             if ($request->hasFile('file')) {
@@ -68,6 +80,14 @@ class LessonController extends Controller
 
     public function update(UpdateLessonRequest $request, Lesson $lesson)
     {
+        
+        if($lesson->user_id != auth()->user()->id) {
+            return response()->json([
+                'message' => 'You are not the owner of this lesson.',
+                'type' => 'error',
+            ]);
+        }
+
         $lesson = DB::transaction(function () use ($request, $lesson) {
             $validated = $request->validated();
 
@@ -100,6 +120,7 @@ class LessonController extends Controller
         return response()->json([
             'statusCode' => 200,
             'message' => 'Lesson updated successfully.',
+            'type' => 'success',
             'data' => $lesson,
         ]);
     }
