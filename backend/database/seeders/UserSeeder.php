@@ -15,12 +15,12 @@ class UserSeeder extends Seeder
     {
         // Create a specific user
         User::factory()->create([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'john.doe@example.com',
+            'first_name' => 'Admin',
+            'last_name' => 'Admon',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin12345'),
         ]);
 
-        // Create 5 random users
-        User::factory(5)->create();
+        User::factory(3)->create();
     }
 }

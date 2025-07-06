@@ -9,7 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 
 
-Route::post('/auth', [AuthenticatedSessionController::class, 'auth']);
+Route::post('/auth/login', [AuthenticatedSessionController::class, 'auth']);
 Route::post('/register', [RegistrationController::class, 'register']);
 
 

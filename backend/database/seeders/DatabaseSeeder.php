@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,11 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             LessonSeeder::class,
             FileSeeder::class,
+        ]);
+        Artisan::call('passport:client', [
+            '--personal' => true,
+            '--name' => 'TeachDrop Personal Access',
+            '--provider' => 'users',
         ]);
     }
 }
