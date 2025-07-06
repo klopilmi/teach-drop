@@ -14,11 +14,19 @@ Route::post('/auth/login', [AuthenticatedSessionController::class, 'auth']);
 Route::post('/register', [RegistrationController::class, 'register']);
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:api')->group(
+    function () {
 
         Route::prefix('auth')->middleware('auth:api')->group(function () {
             Route::get('user', function (Request $request) {
-                return $request->user()->load(['roles']);
+                $user = $request->user()->load(['roles']);
+                return response()->json([
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    // You can decide how to format roles:
+                    'role' => $user->roles->first()?->code,  // ⬅️ assumes one role, adjust if needed
+                ]);
             });
             Route::put('/profile', [UserController::class, 'updateProfile']);
             Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);

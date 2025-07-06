@@ -6,50 +6,56 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(() => Cookies.get('TOKEN') || null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadUser = async () => {
-            try {
-                const response = await api.get('/auth/user');;
-                console.log(response);
-                setUser(response.data)
-            } catch (error) {
-                console.error(error);
-            }
-        };
+        const token = Cookies.get('TOKEN');
 
-        loadUser();
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        api.get('/auth/user')
+            .then(res => {
+                setUser(res.data);
+            })
+            .catch(err => {
+                Cookies.remove('TOKEN');
+                setUser(null);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
-    console.log("ah", user);
 
     const login = (userData, tokenData) => {
         setUser(userData);
-        setToken(tokenData);
-        Cookies.set('TOKEN', tokenData, { expires: 7 }); // expires in 7 days
+        Cookies.set('TOKEN', tokenData, { expires: 7 });
+        api.defaults.headers.common['Authorization'] = `Bearer ${tokenData}`;
     };
 
     const logout = async () => {
         try {
-            await api.post('/auth/logout'); // call your logout API
-        } catch (error) {
-            console.error('Logout failed', error);
-            // Optional: still clear local auth even if server logout fails
+            await api.post('/auth/logout');
+        } catch (err) {
+            console.error('[AuthContext] Logout failed:', err.message);
         } finally {
             setUser(null);
-            setToken(null);
             Cookies.remove('TOKEN');
+            delete api.defaults.headers.common['Authorization'];
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-// Hook to use the auth context
 export function useAuth() {
     return useContext(AuthContext);
 }

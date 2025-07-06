@@ -19,7 +19,7 @@ const routes = [
   { path: '/register', element: <Register /> },
 
   // Dashboard Routes (Admin, Contributor)
-   {
+  {
     path: '/dashboard',
     element: (
       <RoleGuard allowedRoles={['admin', 'contributor']}>

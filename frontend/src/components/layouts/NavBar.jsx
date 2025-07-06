@@ -36,11 +36,11 @@ export default function Navbar() {
                     <Link to="/contributor/lessons">My Lessons</Link>
                 )} */}
 
-                {user && user.role === 'student' && (
-                    <>
-                        <Link to="/profile">Profile</Link>
-                    </>
-                )}
+                {/* {user && user.role === 'student' && ( */}
+                <>
+                    <Link to="/profile">Profile</Link>
+                </>
+
 
                 {user ? (
                     <button onClick={handleLogout} className="bg-white text-brand-500 px-3 py-1 rounded">Logout</button>
