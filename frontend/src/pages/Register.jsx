@@ -1,4 +1,4 @@
-import RegistrationForm from '../components/forms/RegistrationForm'
+import RegistrationForm from '../components/forms/RegistrationForm';
 
 const Register = () => {
     return (
@@ -10,4 +10,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default Register;

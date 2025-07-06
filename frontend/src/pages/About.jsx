@@ -1,4 +1,4 @@
-import { aboutData } from "../static-data/AboutData"
+import { aboutData } from "../static-data/AboutData";
 
 const About = () => {
     return (
@@ -19,4 +19,4 @@ const About = () => {
     )
 }
 
-export default About
+export default About;

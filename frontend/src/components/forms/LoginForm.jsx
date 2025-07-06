@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import InputField from './InputField';
 
 const LoginForm = () => {
@@ -7,20 +9,21 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const apiUrl = import.meta.env.VITE_API_URL;
-
 
         try {
-            const response = await axios.post(`${apiUrl}/auth/login`, {
-                email,
-                password,
-            });
+            const response = await axios.post(`${apiUrl}/auth/login`, { email, password });
+            const { access_token, user } = response.data;
 
-            console.log('Logged in!', response.data);
-            localStorage.setItem('token', response.data.access_token);
-            // Redirect to dashboard or other page
+            login(user, access_token);
+
+            navigate('/profile');
         } catch (error) {
             console.error(error);
             setError(error.response?.data?.message || 'Login failed');

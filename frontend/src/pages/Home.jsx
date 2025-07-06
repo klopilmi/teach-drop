@@ -1,4 +1,4 @@
-import LoginForm from "../components/forms/LoginForm"
+import LoginForm from "../components/forms/LoginForm";
 
 const Home = () => {
     return (
@@ -12,4 +12,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Home;

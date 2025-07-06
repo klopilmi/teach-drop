@@ -22,13 +22,19 @@ class AuthenticatedSessionController extends Controller
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-        
+
         // Credentials are correct — create a personal access token
         $token = $user->createToken('Personal Access Token')->accessToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user' => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'role' => $user->roles->first()?->name,
+            ],
         ]);
     }
 }
