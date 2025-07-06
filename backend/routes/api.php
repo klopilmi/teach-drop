@@ -1,10 +1,17 @@
 <?php
 
+use App\Http\Controllers\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+
+
+Route::post('/auth', [AuthenticatedSessionController::class, 'auth']);
+Route::post('/register', [RegistrationController::class, 'register']);
+
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/categories', [CategoryController::class, 'store']);
