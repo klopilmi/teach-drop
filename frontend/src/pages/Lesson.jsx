@@ -48,6 +48,7 @@ export default function Lesson() {
 
     const confirmDelete = async () => {
         try {
+            
             await axios.delete(`${apiUrl}/lessons/${selectedLesson.id}`);
             setAlert({ message: 'Lesson deleted successfully.', type: 'success' });
             fetchLessons();

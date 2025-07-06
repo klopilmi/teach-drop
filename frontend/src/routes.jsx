@@ -1,8 +1,10 @@
 import RoleGuard from './components/RoleGuard';
+import BaseLayout from './layouts/BaseLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import StudentLayout from './layouts/StudentLayout';
 import About from './pages/About';
 import Category from './pages/Category';
+import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Lesson from './pages/Lesson';
 import ProfilePage from './pages/ProfilePage';
@@ -10,18 +12,27 @@ import Register from './pages/Register';
 import Role from './pages/Role';
 import StudentHome from './pages/StudentHome';
 
-const userRole = 'contributor'; // You'll later pull this from your auth system
-
 const routes = [
-  { path: '/', element: <Home /> },
+  // Public Routes
+  { path: '/', element: <Home /> }, // Login Page
   { path: '/about', element: <About /> },
   { path: '/register', element: <Register /> },
 
   // Dashboard Routes (Admin, Contributor)
+   {
+    path: '/dashboard',
+    element: (
+      <RoleGuard allowedRoles={['admin', 'contributor']}>
+        <DashboardLayout>
+          <Dashboard />
+        </DashboardLayout>
+      </RoleGuard>
+    ),
+  },
   {
     path: '/lessons',
     element: (
-      <RoleGuard allowedRoles={['admin', 'contributor']} userRole={userRole}>
+      <RoleGuard allowedRoles={['admin', 'contributor']}>
         <DashboardLayout>
           <Lesson />
         </DashboardLayout>
@@ -31,7 +42,7 @@ const routes = [
   {
     path: '/categories',
     element: (
-      <RoleGuard allowedRoles={['admin']} userRole={userRole}>
+      <RoleGuard allowedRoles={['admin']}>
         <DashboardLayout>
           <Category />
         </DashboardLayout>
@@ -41,7 +52,7 @@ const routes = [
   {
     path: '/roles',
     element: (
-      <RoleGuard allowedRoles={['admin']} userRole={userRole}>
+      <RoleGuard allowedRoles={['admin']}>
         <DashboardLayout>
           <Role />
         </DashboardLayout>
@@ -49,11 +60,11 @@ const routes = [
     ),
   },
 
-  // Student-only Home
+  // Student Home
   {
     path: '/home',
     element: (
-      <RoleGuard allowedRoles={['student']} userRole={userRole}>
+      <RoleGuard allowedRoles={['student']}>
         <StudentLayout>
           <StudentHome />
         </StudentLayout>
@@ -61,9 +72,18 @@ const routes = [
     ),
   },
 
-  // Profile (no layout wrapper for now)
-  { path: '/profile', element: <ProfilePage /> },
+  // Profile Page (Accessible to ALL roles)
+  {
+    path: '/profile',
+    element: (
+      <RoleGuard allowedRoles={['admin', 'contributor', 'student']}>
+        <BaseLayout>
+          <ProfilePage />
+        </BaseLayout>
+      </RoleGuard>
+    ),
+  },
 
-  { path: '/unauthorized', element: <div>Unauthorized Access</div> },
 ];
+
 export default routes;

@@ -22,7 +22,6 @@ const LoginForm = () => {
             const { access_token, user } = response.data;
 
             login(user, access_token);
-
             navigate('/profile');
         } catch (error) {
             console.error(error);

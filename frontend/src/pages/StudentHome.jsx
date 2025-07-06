@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import api from '../api/axios';
 import AlertMessage from '../components/global/AlertMessage';
 import Modal from '../components/global/Modal';
 import MyButton from '../components/global/MyButton';
@@ -12,7 +12,7 @@ export default function StudentHome() {
 
     const fetchLessons = async () => {
         try {
-            const res = await axios.get(`${apiUrl}/lessons`);
+            const res = await api.get('/lessons');
             setLessons(res.data.data);
         } catch (err) {
             console.error(err);
@@ -22,7 +22,7 @@ export default function StudentHome() {
 
     const fetchLessonDetails = async (lessonId) => {
         try {
-            const res = await axios.get(`${apiUrl}/lessons/${lessonId}`);
+            const res = await api.get(`/lessons/${lessonId}`);
             setSelectedLesson(res.data.data);
         } catch (err) {
             console.error(err);
@@ -44,7 +44,6 @@ export default function StudentHome() {
                         key={lesson.id}
                         className="flex flex-col gap-4 w-full p-4 border rounded-lg shadow-sm bg-white"
                     >
-
                         <h2 className="text-lg font-bold text-brand-500 border-b pb-2">
                             {lesson.title}
                         </h2>
@@ -77,7 +76,6 @@ export default function StudentHome() {
             <Modal isOpen={!!selectedLesson} onClose={() => setSelectedLesson(null)}>
                 {selectedLesson && (
                     <div className="max-w-md mx-auto">
-
                         <h2 className="text-xl font-bold border-b pb-2 text-brand-500 mb-2">
                             {selectedLesson.title}
                         </h2>

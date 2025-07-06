@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { createContext, useContext, useState } from 'react';
+import api from '../api/axios';
 
 const AuthContext = createContext();
 
@@ -13,12 +14,18 @@ export function AuthProvider({ children }) {
         Cookies.set('TOKEN', tokenData, { expires: 7 }); // expires in 7 days
     };
 
-    const logout = () => {
-        setUser(null);
-        setToken(null);
-        Cookies.remove('TOKEN'); // this was previously 'token'
+    const logout = async () => {
+        try {
+            await api.post('/auth/logout'); // call your logout API
+        } catch (error) {
+            console.error('Logout failed', error);
+            // Optional: still clear local auth even if server logout fails
+        } finally {
+            setUser(null);
+            setToken(null);
+            Cookies.remove('TOKEN');
+        }
     };
-
     return (
         <AuthContext.Provider value={{ user, token, login, logout }}>
             {children}
