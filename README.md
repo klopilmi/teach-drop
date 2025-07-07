@@ -3,7 +3,7 @@ It helps contributors upload lessons and students access learning materials.
 
 🚀 **Features**
 
-👩‍🏫 Teacher uploads lessons, such as: PDF, PPT, IMAGE, DOCS.
+👩‍🏫 Teacher uploads lessons, such as: PDF, PPT, DOCS.
 
 🎯 Students view or download lesson
 
@@ -12,5 +12,19 @@ It helps contributors upload lessons and students access learning materials.
 🛡️ Secure API built with Laravel 11
 
 ⚛️ Frontend built with React 18 + Vite
+
+SEEDED USERS
+Admin
+Email: admin@gmail.com
+Password: admin12345
+
+Contributor
+Email: contributor@gmail.com
+Password: contributor12345
+
+Student
+Email: student@gmail.com
+Password: student@gmail.com
+
 
 
