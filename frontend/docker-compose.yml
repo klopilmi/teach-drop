@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: teachdrop
+    restart: unless-stopped
+    ports:
+      - "50000:80"   # Access your app at http://localhost:50000
