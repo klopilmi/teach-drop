@@ -8,4 +8,4 @@ services:
     container_name: teachdrop
     restart: unless-stopped
     ports:
-      - "50000:80"   # Access your app at http://localhost:50000
+      - "50001:80"   # Access your app at http://localhost:50000
