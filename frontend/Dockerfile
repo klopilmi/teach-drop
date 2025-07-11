@@ -22,7 +22,7 @@ WORKDIR /app
 RUN npm install -g serve
 
 # Copy built files from the build stage
-COPY --from=build /app/dist ./dist
+COPY --from=build /teachdrop/dist ./dist
 
 EXPOSE 80
 
