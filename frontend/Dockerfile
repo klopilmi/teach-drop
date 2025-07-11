@@ -1,7 +1,7 @@
 # Stage 1: Build
 FROM node:20 AS build
 
-WORKDIR /app
+WORKDIR /teachdrop
 COPY . .
 
 # Install dependencies
