@@ -21,6 +21,6 @@ It helps contributors upload lessons and students access learning materials.
 |-------------|----------------------------|----------------|
 | Admin       | admin@gmail.com            | admin12345     |
 | Contributor | contributor@gmail.com      | contributor12345 |
-| Student     | student@gmail.com          | student@gmail.com |
+| Student     | student@gmail.com          | student12345|
 
 ---
